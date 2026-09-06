@@ -1,0 +1,1212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecurePass Pro - Cybersecurity Toolkit</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0c7cd5;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --dark-bg: #0a0e17;
+            --darker-bg: #05080f;
+            --card-bg: #131a2a;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 70%);
+            color: #e9ecef;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230c7cd5" fill-opacity="0.05" d="M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,224C672,235,768,181,864,160C960,139,1056,149,1152,165.3C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            z-index: -1;
+        }
+        
+        .navbar {
+            background: rgba(10, 14, 23, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(12, 124, 213, 0.2);
+            padding: 0.8rem 1rem;
+        }
+        
+        .hero-section {
+            padding: 5rem 0 3rem;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-weight: 800;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #0c7cd5, #17a2b8, #28a745);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(12, 124, 213, 0.3);
+        }
+        
+        .hero-subtitle {
+            font-size: 1.4rem;
+            margin-bottom: 2.5rem;
+            color: #adb5bd;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .tool-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 1.5rem;
+            height: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        
+        .tool-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 0;
+            background: linear-gradient(to bottom, var(--accent-color), transparent);
+            transition: height 0.5s ease;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tool-card:hover::before {
+            height: 100%;
+        }
+        
+        .tool-card .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.2rem;
+            background: linear-gradient(135deg, var(--accent-color), transparent);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .tool-card .card-title {
+            font-size: 1.4rem;
+            margin-bottom: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .tool-card .card-text {
+            color: #adb5bd;
+            margin-bottom: 1.5rem;
+            font-size: 0.95rem;
+        }
+        
+        .btn-tool {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #f8f9fa;
+            padding: 0.6rem 1.5rem;
+            border-radius: 30px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .btn-tool::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-color), transparent);
+            transition: all 0.5s ease;
+            z-index: -1;
+        }
+        
+        .btn-tool:hover {
+            color: #fff;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4);
+        }
+        
+        .btn-tool:hover::before {
+            width: 100%;
+        }
+        
+        .password-card { --accent-color: #0c7cd5; --accent-rgb: 12, 124, 213; }
+        .text-encrypt-card { --accent-color: #17a2b8; --accent-rgb: 23, 162, 184; }
+        .image-encrypt-card { --accent-color: #ffc107; --accent-rgb: 255, 193, 7; }
+        .file-encrypt-card { --accent-color: #28a745; --accent-rgb: 40, 167, 69; }
+        .keylogger-card { --accent-color: #dc3545; --accent-rgb: 220, 53, 69; }
+        .web-keylogger-card { --accent-color: #e83e8c; --accent-rgb: 232, 62, 140; }
+        
+        .tool-section {
+            display: none;
+            padding: 2rem 0;
+        }
+        
+        .active-section {
+            display: block;
+        }
+        
+        .back-button {
+            margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #adb5bd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .back-button:hover {
+            color: #fff;
+        }
+        
+        /* Password Analyzer Styles */
+        .password-input-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+        
+        .password-input {
+            padding-right: 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 8px;
+        }
+        
+        .password-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(12, 124, 213, 0.5);
+            box-shadow: 0 0 0 0.25rem rgba(12, 124, 213, 0.25);
+            color: #fff;
+        }
+        
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        
+        .toggle-password:hover {
+            color: #0c7cd5;
+        }
+        
+        .strength-meter {
+            height: 8px;
+            border-radius: 4px;
+            background: #2c3444;
+            margin: 1.5rem 0;
+            overflow: hidden;
+        }
+        
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 4px;
+            transition: width 0.5s ease, background 0.5s ease;
+        }
+        
+        .strength-labels {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        
+        .strength-label {
+            transition: color 0.3s;
+        }
+        
+        .strength-label.active {
+            font-weight: 600;
+        }
+        
+        .criteria-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 2rem 0;
+        }
+        
+        .criterion {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.8rem;
+            font-size: 0.95rem;
+        }
+        
+        .criterion i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+        
+        .criterion .fa-check {
+            color: var(--success);
+        }
+        
+        .criterion .fa-times {
+            color: var(--danger);
+        }
+        
+        .btn-analyze {
+            background: linear-gradient(90deg, var(--primary), #0d6efd);
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-analyze:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(12, 124, 213, 0.4);
+        }
+        
+        .result-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            display: none;
+        }
+        
+        .result-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .result-icon {
+            font-size: 2rem;
+            margin-right: 1rem;
+        }
+        
+        .strength-weak { color: var(--danger); }
+        .strength-medium { color: var(--warning); }
+        .strength-strong { color: var(--success); }
+        
+        .suggestions-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .suggestion-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 0.8rem;
+            padding: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+        }
+        
+        .suggestion-item i {
+            color: var(--warning);
+            margin-right: 10px;
+            margin-top: 3px;
+        }
+        
+        .password-stat {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .stat-value {
+            font-weight: 600;
+        }
+        
+        /* Web Keylogger Styles */
+        .warning-banner {
+            background: linear-gradient(90deg, rgba(220, 53, 69, 0.15), rgba(253, 126, 20, 0.15));
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .warning-icon {
+            font-size: 2.5rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        
+        .input-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 8px;
+            padding: 1rem;
+            resize: vertical;
+            min-height: 120px;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+        
+        .input-area:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(220, 53, 69, 0.5);
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+            color: #fff;
+            outline: none;
+        }
+        
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #fff;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .log-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-control {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #fff;
+            border-radius: 4px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-control:hover {
+            background: rgba(220, 53, 69, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .stats-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #dc3545;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #adb5bd;
+        }
+        
+        .key {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 0.1rem;
+        }
+        
+        .special-key {
+            background: rgba(253, 126, 20, 0.2);
+            border-color: rgba(253, 126, 20, 0.3);
+        }
+        
+        /* Keylogger Simulation Styles */
+        .simulation-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 1.5rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        
+        .code-comment {
+            color: #6c757d;
+        }
+        
+        .code-keyword {
+            color: #dc3545;
+        }
+        
+        .code-function {
+            color: #0c7cd5;
+        }
+        
+        .code-string {
+            color: #28a745;
+        }
+        
+        /* Animation for key presses */
+        @keyframes keyPress {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        
+        .key-press {
+            animation: keyPress 0.2s ease;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 2.8rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.3rem;
+            }
+            
+            .tool-card {
+                margin-bottom: 1.5rem;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#" onclick="showSection('home')">
+                <i class="fas fa-shield-alt me-2" style="color: #0c7cd5;"></i>
+                <span class="fw-bold">SecurePass Pro</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home-section" class="active-section">
+        <div class="hero-section">
+            <div class="container">
+                <h1 class="hero-title">🔐 SecurePass Pro</h1>
+                <p class="hero-subtitle">Your all-in-one cybersecurity toolkit featuring password analysis, encryption tools, and security simulations to protect your digital life.</p>
+                
+                <div class="row g-4">
+                    <div class="col-md-6 col-lg-4">
+                        <div class="tool-card password-card" onclick="showSection('password')">
+                            <div class="card-icon">
+                                <i class="fas fa-key"></i>
+                            </div>
+                            <h3 class="card-title">Password Analyzer</h3>
+                            <p class="card-text">Test your password strength and get recommendations for improving your security.</p>
+                            <div class="btn-tool">Use Tool</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4">
+                        <div class="tool-card text-encrypt-card" onclick="showSection('text-encrypt')">
+                            <div class="card-icon">
+                                <i class="fas fa-font"></i>
+                            </div>
+                            <h3 class="card-title">Text Encrypt/Decrypt</h3>
+                            <p class="card-text">Securely encrypt and decrypt sensitive text messages with advanced algorithms.</p>
+                            <div class="btn-tool">Use Tool</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4">
+                        <div class="tool-card image-encrypt-card" onclick="showSection('image-encrypt')">
+                            <div class="card-icon">
+                                <i class="fas fa-image"></i>
+                            </div>
+                            <h3 class="card-title">Image Encrypt/Decrypt</h3>
+                            <p class="card-text">Protect your sensitive images with strong encryption to prevent unauthorized access.</p>
+                            <div class="btn-tool">Use Tool</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4">
+                        <div class="tool-card file-encrypt-card" onclick="showSection('file-encrypt')">
+                            <div class="card-icon">
+                                <i class="fas fa-file"></i>
+                            </div>
+                            <h3 class="card-title">File Encrypt/Decrypt</h3>
+                            <p class="card-text">Encrypt any type of file with military-grade encryption to keep your data safe.</p>
+                            <div class="btn-tool">Use Tool</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4">
+                        <div class="tool-card keylogger-card" onclick="showSection('keylogger')">
+                            <div class="card-icon">
+                                <i class="fas fa-keyboard"></i>
+                            </div>
+                            <h3 class="card-title">Keylogger Simulation</h3>
+                            <p class="card-text">Understand how keyloggers work and learn how to protect yourself from them.</p>
+                            <div class="btn-tool">Use Tool</div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-lg-4">
+                        <div class="tool-card web-keylogger-card" onclick="showSection('web-keylogger')">
+                            <div class="card-icon">
+                                <i class="fas fa-laptop"></i>
+                            </div>
+                            <h3 class="card-title">Web Keylogger Demo</h3>
+                            <p class="card-text">See how web-based keyloggers operate and learn defensive strategies against them.</p>
+                            <div class="btn-tool">Use Tool</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Password Analyzer Section -->
+    <section id="password-section" class="tool-section">
+        <div class="container mt-5">
+            <a href="#" class="back-button" onclick="showSection('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <h1 class="page-title mb-4">Password Strength Analyzer</h1>
+                    <p class="page-subtitle">Test your password security and get personalized suggestions to enhance protection.</p>
+                    
+                    <div class="analyzer-container">
+                        <form id="passwordForm">
+                            <div class="password-input-group">
+                                <input type="password" class="form-control password-input" id="passwordInput" placeholder="Enter your password" required autocomplete="off">
+                                <button type="button" class="toggle-password" id="togglePassword">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                            
+                            <div class="strength-meter">
+                                <div class="strength-fill" id="strengthFill"></div>
+                            </div>
+                            
+                            <div class="strength-labels">
+                                <span class="strength-label" id="labelWeak">Weak</span>
+                                <span class="strength-label" id="labelMedium">Medium</span>
+                                <span class="strength-label" id="labelStrong">Strong</span>
+                                <span class="strength-label" id="labelVeryStrong">Very Strong</span>
+                            </div>
+                            
+                            <h5>Password Requirements:</h5>
+                            <ul class="criteria-list">
+                                <li class="criterion" id="criterionLength">
+                                    <i class="fas fa-times"></i>
+                                    <span>At least 12 characters</span>
+                                </li>
+                                <li class="criterion" id="criterionUppercase">
+                                    <i class="fas fa-times"></i>
+                                    <span>Contains uppercase letters</span>
+                                </li>
+                                <li class="criterion" id="criterionLowercase">
+                                    <i class="fas fa-times"></i>
+                                    <span>Contains lowercase letters</span>
+                                </li>
+                                <li class="criterion" id="criterionNumber">
+                                    <i class="fas fa-times"></i>
+                                    <span>Contains numbers</span>
+                                </li>
+                                <li class="criterion" id="criterionSpecial">
+                                    <i class="fas fa-times"></i>
+                                    <span>Contains special characters</span>
+                                </li>
+                            </ul>
+                            
+                            <div class="d-flex gap-2 button-group">
+                                <button type="submit" class="btn btn-analyze flex-grow-1">
+                                    <i class="fas fa-search me-2"></i>Analyze Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    
+                    <!-- Result Container -->
+                    <div class="result-container" id="resultContainer">
+                        <div class="result-header">
+                            <i class="result-icon fas fa-shield-alt" id="resultIcon"></i>
+                            <div>
+                                <h4 id="resultTitle">Password Strength: <span id="strengthText">Strong</span></h4>
+                                <p class="mb-0" id="resultDescription">Your password provides good protection against attacks.</p>
+                            </div>
+                        </div>
+                        
+                        <h5>Password Statistics:</h5>
+                        <div class="password-stats mb-3">
+                            <div class="password-stat">
+                                <span>Length:</span>
+                                <span class="stat-value" id="statLength">0 characters</span>
+                            </div>
+                            <div class="password-stat">
+                                <span>Character variety:</span>
+                                <span class="stat-value" id="statVariety">0 types</span>
+                            </div>
+                            <div class="password-stat">
+                                <span>Estimated crack time:</span>
+                                <span class="stat-value" id="statCrackTime">Instantly</span>
+                            </div>
+                        </div>
+                        
+                        <h5>Suggestions for improvement:</h5>
+                        <ul class="suggestions-list" id="suggestionsList">
+                            <!-- Suggestions will be added here dynamically -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Keylogger Simulation Section -->
+    <section id="keylogger-section" class="tool-section">
+        <div class="container mt-5">
+            <a href="#" class="back-button" onclick="showSection('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <h1 class="page-title mb-4">Keylogger Simulation</h1>
+                    <p class="page-subtitle">Understand how keyloggers work and learn how to protect yourself from them.</p>
+                    
+                    <div class="warning-banner">
+                        <div class="warning-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h4>Educational Content Only</h4>
+                        <p class="mb-0">This is a <strong>safe educational demonstration</strong> showing how keyloggers work. Real keyloggers are malicious and can steal sensitive information.</p>
+                    </div>
+                    
+                    <div class="simulation-container">
+                        <h3>How Keyloggers Work</h3>
+                        <p>Keyloggers are programs or hardware devices that record every keystroke made on a computer. They can be used by attackers to steal passwords, credit card information, and other sensitive data.</p>
+                        
+                        <h4 class="mt-4">Python Keylogger Example (Educational Only)</h4>
+                        <div class="code-block">
+                            <span class="code-keyword">import</span> pynput<br>
+                            <span class="code-keyword">from</span> pynput.keyboard <span class="code-keyword">import</span> Key, Listener<br>
+                            <br>
+                            <span class="code-keyword">def</span> <span class="code-function">on_press</span>(key):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">try</span>:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">with</span> open(<span class="code-string">"keylog.txt"</span>, <span class="code-string">"a"</span>) <span class="code-keyword">as</span> f:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;f.write(str(key))<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">except</span> Exception <span class="code-keyword">as</span> e:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;print(str(e))<br>
+                            <br>
+                            <span class="code-keyword">def</span> <span class="code-function">on_release</span>(key):<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">if</span> key == Key.esc:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="code-keyword">return</span> False<br>
+                            <br>
+                            <span class="code-keyword">with</span> Listener(on_press=on_press, on_release=on_release) <span class="code-keyword">as</span> listener:<br>
+                            &nbsp;&nbsp;&nbsp;&nbsp;listener.join()
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>Warning:</strong> This code is for educational purposes only. Using keyloggers without explicit permission is illegal and unethical.
+                        </div>
+                        
+                        <h4 class="mt-4">How to Protect Yourself</h4>
+                        <ul>
+                            <li>Use updated antivirus software with real-time protection</li>
+                            <li>Be cautious about downloading and installing software</li>
+                            <li>Use two-factor authentication for important accounts</li>
+                            <li>Regularly check for suspicious processes on your computer</li>
+                            <li>Use a virtual keyboard for entering sensitive information</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Web Keylogger Demo Section -->
+    <section id="web-keylogger-section" class="tool-section">
+        <div class="container mt-5">
+            <a href="#" class="back-button" onclick="showSection('home')">
+                <i class="fas fa-arrow-left"></i> Back to Home
+            </a>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <h1 class="page-title mb-4">Web Keylogger Demonstration</h1>
+                    <p class="page-subtitle">This educational demo shows how keystrokes can be captured in a web browser - understand the risks and learn how to protect yourself.</p>
+                    
+                    <!-- Warning Banner -->
+                    <div class="warning-banner">
+                        <div class="warning-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h4>Educational Demo Only</h4>
+                        <p class="mb-0">This is a <strong>safe demonstration</strong> running entirely in your browser. No data is sent to any server. Real keyloggers are malicious and can steal sensitive information.</p>
+                    </div>
+                    
+                    <div class="demo-container">
+                        <h3 class="mb-4">Try typing in the box below:</h3>
+                        
+                        <textarea class="form-control input-area" placeholder="Type something here to see how keylogging works..." rows="4"></textarea>
+                        
+                        <div class="log-header">
+                            <h4 class="mb-0">Captured Keystrokes:</h4>
+                            <div class="log-controls">
+                                <button class="btn-control" id="clearLog">
+                                    <i class="fas fa-trash me-1"></i> Clear
+                                </button>
+                                <button class="btn-control" id="pauseLog">
+                                    <i class="fas fa-pause me-1"></i> Pause
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="log-area" id="logArea">
+                            <div class="text-center text-muted py-4" id="emptyLogMessage">
+                                <i class="fas fa-keyboard fa-2x mb-2"></i>
+                                <p>No keystrokes captured yet.<br>Start typing in the box above.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-container">
+                            <div class="stat-box">
+                                <div class="stat-value" id="totalKeys">0</div>
+                                <div class="stat-label">Total Keystrokes</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="uniqueKeys">0</div>
+                                <div class="stat-label">Unique Keys</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="specialKeys">0</div>
+                                <div class="stat-label">Special Keys</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Other tool sections would be implemented similarly -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Section navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('.tool-section, #home-section').forEach(section => {
+                section.classList.remove('active-section');
+            });
+            
+            if (sectionId === 'home') {
+                document.getElementById('home-section').classList.add('active-section');
+            } else {
+                document.getElementById(`${sectionId}-section`).classList.add('active-section');
+            }
+            
+            window.scrollTo(0, 0);
+        }
+        
+        // Password Analyzer functionality
+        const passwordInput = document.getElementById('passwordInput');
+        const togglePassword = document.getElementById('togglePassword');
+        const strengthFill = document.getElementById('strengthFill');
+        const criteria = {
+            length: document.getElementById('criterionLength'),
+            uppercase: document.getElementById('criterionUppercase'),
+            lowercase: document.getElementById('criterionLowercase'),
+            number: document.getElementById('criterionNumber'),
+            special: document.getElementById('criterionSpecial')
+        };
+        const strengthLabels = {
+            weak: document.getElementById('labelWeak'),
+            medium: document.getElementById('labelMedium'),
+            strong: document.getElementById('labelStrong'),
+            veryStrong: document.getElementById('labelVeryStrong')
+        };
+        const resultContainer = document.getElementById('resultContainer');
+        const resultIcon = document.getElementById('resultIcon');
+        const strengthText = document.getElementById('strengthText');
+        const resultDescription = document.getElementById('resultDescription');
+        const suggestionsList = document.getElementById('suggestionsList');
+        const statLength = document.getElementById('statLength');
+        const statVariety = document.getElementById('statVariety');
+        const statCrackTime = document.getElementById('statCrackTime');
+
+        // Toggle password visibility
+        togglePassword.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.innerHTML = type === 'password' ? '<i class="fas fa-eye"></i>' : '<i class="fas fa-eye-slash"></i>';
+        });
+
+        // Real-time password strength checking
+        passwordInput.addEventListener('input', function() {
+            analyzePassword(this.value, true);
+        });
+
+        // Form submission
+        document.getElementById('passwordForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            analyzePassword(passwordInput.value, false);
+            
+            // Show result container
+            resultContainer.style.display = 'block';
+            
+            // Scroll to results
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        });
+
+        // Password analysis function
+        function analyzePassword(password, isRealTime) {
+            const hasLength = password.length >= 12;
+            const hasUppercase = /[A-Z]/.test(password);
+            const hasLowercase = /[a-z]/.test(password);
+            const hasNumber = /[0-9]/.test(password);
+            const hasSpecial = /[^A-Za-z0-9]/.test(password);
+            
+            // Update criteria icons
+            updateCriterion(criteria.length, hasLength);
+            updateCriterion(criteria.uppercase, hasUppercase);
+            updateCriterion(criteria.lowercase, hasLowercase);
+            updateCriterion(criteria.number, hasNumber);
+            updateCriterion(criteria.special, hasSpecial);
+            
+            // Calculate strength score (0-100)
+            let strengthScore = 0;
+            if (hasLength) strengthScore += 25;
+            if (hasUppercase) strengthScore += 15;
+            if (hasLowercase) strengthScore += 15;
+            if (hasNumber) strengthScore += 15;
+            if (hasSpecial) strengthScore += 20;
+            
+            // Adjust score based on length beyond minimum
+            if (password.length > 12) {
+                strengthScore += Math.min(10, (password.length - 12) * 2);
+            }
+            
+            // Update strength meter
+            strengthFill.style.width = `${strengthScore}%`;
+            
+            // Update strength meter color and labels
+            if (strengthScore < 40) {
+                strengthFill.style.background = '#dc3545';
+                updateStrengthLabel('weak');
+            } else if (strengthScore < 70) {
+                strengthFill.style.background = '#ffc107';
+                updateStrengthLabel('medium');
+            } else if (strengthScore < 90) {
+                strengthFill.style.background = '#17a2b8';
+                updateStrengthLabel('strong');
+            } else {
+                strengthFill.style.background = '#28a745';
+                updateStrengthLabel('veryStrong');
+            }
+            
+            // If not real-time (form submitted), update result section
+            if (!isRealTime) {
+                updateResultSection(password, strengthScore, hasLength, hasUppercase, hasLowercase, hasNumber, hasSpecial);
+            }
+        }
+        
+        function updateCriterion(element, meets) {
+            const icon = element.querySelector('i');
+            if (meets) {
+                icon.className = 'fas fa-check';
+                element.classList.add('pulse');
+                setTimeout(() => element.classList.remove('pulse'), 500);
+            } else {
+                icon.className = 'fas fa-times';
+            }
+        }
+        
+        function updateStrengthLabel(activeLabel) {
+            // Remove active class from all labels
+            Object.values(strengthLabels).forEach(label => {
+                label.classList.remove('active');
+                label.style.color = '';
+            });
+            
+            // Add active class to current label
+            strengthLabels[activeLabel].classList.add('active');
+            
+            // Color the active label
+            if (activeLabel === 'weak') strengthLabels[activeLabel].style.color = '#dc3545';
+            else if (activeLabel === 'medium') strengthLabels[activeLabel].style.color = '#ffc107';
+            else if (activeLabel === 'strong') strengthLabels[activeLabel].style.color = '#17a2b8';
+            else strengthLabels[activeLabel].style.color = '#28a745';
+        }
+        
+        function updateResultSection(password, strengthScore, hasLength, hasUppercase, hasLowercase, hasNumber, hasSpecial) {
+            // Update stats
+            statLength.textContent = `${password.length} characters`;
+            
+            // Calculate character variety
+            let varietyCount = 0;
+            if (hasUppercase) varietyCount++;
+            if (hasLowercase) varietyCount++;
+            if (hasNumber) varietyCount++;
+            if (hasSpecial) varietyCount++;
+            statVariety.textContent = `${varietyCount} of 4 character types`;
+            
+            // Estimate crack time (simplified)
+            let crackTime = "Instantly";
+            if (password.length >= 8) crackTime = "Several days";
+            if (password.length >= 10 && varietyCount >= 3) crackTime = "Several months";
+            if (password.length >= 12 && varietyCount >= 4) crackTime = "Centuries";
+            statCrackTime.textContent = crackTime;
+            
+            // Update strength text and icon
+            let strengthLevel, description, iconClass, textClass;
+            
+            if (strengthScore < 40) {
+                strengthLevel = "Weak";
+                description = "Your password is easily guessable and provides minimal protection.";
+                iconClass = "fas fa-shield-alt strength-weak";
+                textClass = "strength-weak";
+            } else if (strengthScore < 70) {
+                strengthLevel = "Medium";
+                description = "Your password provides basic protection but could be improved.";
+                iconClass = "fas fa-shield-alt strength-medium";
+                textClass = "strength-medium";
+            } else if (strengthScore < 90) {
+                strengthLevel = "Strong";
+                description = "Your password provides good protection against most attacks.";
+                iconClass = "fas fa-shield-alt strength-strong";
+                textClass = "strength-strong";
+            } else {
+                strengthLevel = "Very Strong";
+                description = "Your password provides excellent protection against sophisticated attacks.";
+                iconClass = "fas fa-shield-alt strength-strong";
+                textClass = "strength-strong";
+            }
+            
+            resultIcon.className = iconClass;
+            strengthText.textContent = strengthLevel;
+            strengthText.className = textClass;
+            resultDescription.textContent = description;
+            
+            // Generate suggestions
+            suggestionsList.innerHTML = '';
+            const suggestions = [];
+            
+            if (!hasLength) {
+                suggestions.push("Use at least 12 characters - longer passwords are more secure");
+            }
+            
+            if (!hasUppercase) {
+                suggestions.push("Add uppercase letters (A-Z) to increase complexity");
+            }
+            
+            if (!hasLowercase) {
+                suggestions.push("Include lowercase letters (a-z) for better variety");
+            }
+            
+            if (!hasNumber) {
+                suggestions.push("Include numbers (0-9) to strengthen your password");
+            }
+            
+            if (!hasSpecial) {
+                suggestions.push("Add special characters (!@#$%^&*) for maximum security");
+            }
+            
+            if (password.length < 16 && strengthScore > 70) {
+                suggestions.push("Consider making your password even longer (16+ characters)");
+            }
+            
+            if (suggestions.length === 0) {
+                suggestions.push("Your password meets all basic security requirements. Well done!");
+            }
+            
+            // Add suggestions to the list
+            suggestions.forEach(suggestion => {
+                const li = document.createElement('li');
+                li.className = 'suggestion-item';
+                li.innerHTML = `<i class="fas fa-lightbulb"></i> ${suggestion}`;
+                suggestionsList.appendChild(li);
+            });
+        }
+        
+        // Initialize with empty password analysis
+        analyzePassword('', true);
+        
+        // Web Keylogger functionality
+        const inputArea = document.querySelector('.input-area');
+        const logArea = document.getElementById('logArea');
+        const emptyLogMessage = document.getElementById('emptyLogMessage');
+        const clearLogBtn = document.getElementById('clearLog');
+        const pauseLogBtn = document.getElementById('pauseLog');
+        const totalKeysElement = document.getElementById('totalKeys');
+        const uniqueKeysElement = document.getElementById('uniqueKeys');
+        const specialKeysElement = document.getElementById('specialKeys');
+        
+        // State variables
+        let isLogging = true;
+        let totalKeys = 0;
+        let uniqueKeysSet = new Set();
+        let specialKeysCount = 0;
+        let specialKeys = ['Enter', ' ', 'Tab', 'Escape', 'Backspace', 'Delete', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+        
+        // Initialize
+        updateStats();
+        
+        // Capture keystrokes
+        inputArea.addEventListener('keydown', function(event) {
+            if (!isLogging) return;
+            
+            // Hide empty message if it's visible
+            if (emptyLogMessage.style.display !== 'none') {
+                emptyLogMessage.style.display = 'none';
+            }
+            
+            // Prevent default for some keys to avoid issues
+            if (['Tab', 'Enter'].includes(event.key)) {
+                event.preventDefault();
+            }
+            
+            // Create key element
+            const keyElement = document.createElement('span');
+            keyElement.className = 'key';
+            
+            // Check if it's a special key
+            if (event.key.length > 1 || event.key === ' ') {
+                keyElement.classList.add('special-key');
+                keyElement.textContent = event.key === ' ' ? 'Space' : event.key;
+                specialKeysCount++;
+            } else {
+                keyElement.textContent = event.key;
+            }
+            
+            // Add animation
+            keyElement.classList.add('key-press');
+            setTimeout(() => {
+                keyElement.classList.remove('key-press');
+            }, 200);
+            
+            // Add to log
+            logArea.appendChild(keyElement);
+            
+            // Scroll to bottom
+            logArea.scrollTop = logArea.scrollHeight;
+            
+            // Update stats
+            totalKeys++;
+            uniqueKeysSet.add(event.key);
+            updateStats();
+        });
+        
+        // Clear log function
+        clearLogBtn.addEventListener('click', function() {
+            logArea.innerHTML = '';
+            emptyLogMessage.style.display = 'block';
+            
+            // Reset stats
+            totalKeys = 0;
+            uniqueKeysSet.clear();
+            specialKeysCount = 0;
+            updateStats();
+        });
+        
+        // Pause/resume logging
+        pauseLogBtn.addEventListener('click', function() {
+            isLogging = !isLogging;
+            if (isLogging) {
+                pauseLogBtn.innerHTML = '<i class="fas fa-pause me-1"></i> Pause';
+                pauseLogBtn.style.backgroundColor = 'rgba(220, 53, 69, 0.2)';
+            } else {
+                pauseLogBtn.innerHTML = '<i class="fas fa-play me-1"></i> Resume';
+                pauseLogBtn.style.backgroundColor = 'rgba(40, 167, 69, 0.2)';
+            }
+        });
+        
+        // Update statistics
+        function updateStats() {
+            totalKeysElement.textContent = totalKeys;
+            uniqueKeysElement.textContent = uniqueKeysSet.size;
+            specialKeysElement.textContent = specialKeysCount;
+        }
+        
+        // Focus the input area when the page loads
+        window.addEventListener('load', function() {
+            inputArea.focus();
+        });
+    </script>
+</body>
+</html>

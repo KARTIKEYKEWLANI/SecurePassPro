@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Secure Cloud Files</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #0a0e17;
+            color: white;
+            padding: 40px;
+        }
+        h2 {
+            color: #0c7cd5;
+        }
+        .file-box {
+            background: #131a2a;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+        a {
+            color: #17a2b8;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<h2>🔐 Secure Cloud Files</h2>
+
+{% for file in files %}
+<div class="file-box">
+    📄 {{ file.display }}
+    <a href="/download/{{ file.original }}">⬇ Download</a>
+</div>
+{% endfor %}
+
+<br>
+<a href="/">⬅ Back</a>
+
+</body>
+</html>

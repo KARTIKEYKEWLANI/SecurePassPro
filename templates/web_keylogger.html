@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Keylogger Demo | SecurePass Pro</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0c7cd5;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --dark-bg: #0a0e17;
+            --darker-bg: #05080f;
+            --card-bg: #131a2a;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 70%);
+            color: #e9ecef;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23dc3545" fill-opacity="0.05" d="M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,224C672,235,768,181,864,160C960,139,1056,149,1152,165.3C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+            background-size: cover;
+            z-index: -1;
+        }
+        
+        .navbar {
+            background: rgba(10, 14, 23, 0.95) !important;
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(220, 53, 69, 0.2);
+            padding: 0.8rem 1rem;
+        }
+        
+        .page-header {
+            padding: 5rem 0 2rem;
+            text-align: center;
+        }
+        
+        .page-title {
+            font-weight: 800;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #dc3545, #fd7e14);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 10px rgba(220, 53, 69, 0.3);
+        }
+        
+        .page-subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: #adb5bd;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .warning-banner {
+            background: linear-gradient(90deg, rgba(220, 53, 69, 0.15), rgba(253, 126, 20, 0.15));
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .warning-icon {
+            font-size: 2.5rem;
+            color: #dc3545;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-container {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .input-area {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 8px;
+            padding: 1rem;
+            resize: vertical;
+            min-height: 120px;
+            transition: all 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-area:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(220, 53, 69, 0.5);
+            box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
+            color: #fff;
+            outline: none;
+        }
+        
+        .input-area::placeholder {
+            color: #6c757d;
+        }
+        
+        .log-area {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #fff;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 150px;
+            font-family: 'Courier New', monospace;
+            overflow-y: auto;
+            position: relative;
+        }
+        
+        .log-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .log-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .btn-control {
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            color: #fff;
+            border-radius: 4px;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-control:hover {
+            background: rgba(220, 53, 69, 0.3);
+            transform: translateY(-2px);
+        }
+        
+        .stats-container {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .stat-box {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 1rem;
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #dc3545;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            font-size: 0.85rem;
+            color: #adb5bd;
+        }
+        
+        .security-info {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 3rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .info-icon {
+            color: #dc3545;
+            font-size: 1.2rem;
+            margin-top: 0.2rem;
+        }
+        
+        .info-content h5 {
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+        
+        .info-content p {
+            color: #adb5bd;
+            margin-bottom: 0;
+            font-size: 0.95rem;
+        }
+        
+        .btn-back {
+            background: rgba(255, 255, 255, 0.1);
+            color: #f8f9fa;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 0.8rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+            margin-top: 1rem;
+        }
+        
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+            color: #f8f9fa;
+        }
+        
+        .key {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid rgba(220, 53, 69, 0.3);
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 0.1rem;
+        }
+        
+        .special-key {
+            background: rgba(253, 126, 20, 0.2);
+            border-color: rgba(253, 126, 20, 0.3);
+        }
+        
+        /* Animation for key presses */
+        @keyframes keyPress {
+            0% { transform: scale(1); }
+            50% { transform: scale(0.95); }
+            100% { transform: scale(1); }
+        }
+        
+        .key-press {
+            animation: keyPress 0.2s ease;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 2.2rem;
+            }
+            
+            .demo-container {
+                padding: 1.5rem;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <i class="fas fa-shield-alt me-2" style="color: #0c7cd5;"></i>
+                <span class="fw-bold">SecurePass Pro</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/file-encrypt">File Encryption</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/password">Password Tools</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/web-keylogger">Keylogger Demo</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="container">
+            <h1 class="page-title">Web Keylogger Demonstration</h1>
+            <p class="page-subtitle">This educational demo shows how keystrokes can be captured in a web browser - understand the risks and learn how to protect yourself.</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <section class="main-content">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-10">
+                    <!-- Warning Banner -->
+                    <div class="warning-banner">
+                        <div class="warning-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h4>Educational Demo Only</h4>
+                        <p class="mb-0">This is a <strong>safe demonstration</strong> running entirely in your browser. No data is sent to any server. Real keyloggers are malicious and can steal sensitive information.</p>
+                    </div>
+                    
+                    <div class="demo-container">
+                        <h3 class="mb-4">Try typing in the box below:</h3>
+                        
+                        <textarea class="form-control input-area" placeholder="Type something here to see how keylogging works..." rows="4"></textarea>
+                        
+                        <div class="log-header">
+                            <h4 class="mb-0">Captured Keystrokes:</h4>
+                            <div class="log-controls">
+                                <button class="btn-control" id="clearLog">
+                                    <i class="fas fa-trash me-1"></i> Clear
+                                </button>
+                                <button class="btn-control" id="pauseLog">
+                                    <i class="fas fa-pause me-1"></i> Pause
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="log-area" id="logArea">
+                            <div class="text-center text-muted py-4" id="emptyLogMessage">
+                                <i class="fas fa-keyboard fa-2x mb-2"></i>
+                                <p>No keystrokes captured yet.<br>Start typing in the box above.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-container">
+                            <div class="stat-box">
+                                <div class="stat-value" id="totalKeys">0</div>
+                                <div class="stat-label">Total Keystrokes</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="uniqueKeys">0</div>
+                                <div class="stat-label">Unique Keys</div>
+                            </div>
+                            <div class="stat-box">
+                                <div class="stat-value" id="specialKeys">0</div>
+                                <div class="stat-label">Special Keys</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="text-center">
+                        <a href="/" class="btn-back">
+                            <i class="fas fa-arrow-left me-2"></i>Back to Home
+                        </a>
+                    </div>
+                    
+                    <!-- Security Information -->
+                    <div class="security-info">
+                        <h4 class="info-title"><i class="fas fa-shield-alt"></i> Protecting Against Keyloggers</h4>
+                        
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-desktop"></i></div>
+                            <div class="info-content">
+                                <h5>Use Updated Software</h5>
+                                <p>Keep your operating system and browsers updated to protect against known vulnerabilities that keyloggers exploit.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-keyboard"></i></div>
+                            <div class="info-content">
+                                <h5>Virtual Keyboards</h5>
+                                <p>For sensitive inputs, use virtual keyboards that prevent hardware keyloggers from capturing your keystrokes.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-user-lock"></i></div>
+                            <div class="info-content">
+                                <h5>Two-Factor Authentication</h5>
+                                <p>Even if a keylogger captures your password, 2FA provides an additional layer of security that's much harder to bypass.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div class="info-content">
+                                <h5>Be Cautious</h5>
+                                <p>Avoid downloading software from untrusted sources and be wary of phishing attempts that may install keyloggers.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // DOM Elements
+        const inputArea = document.querySelector('.input-area');
+        const logArea = document.getElementById('logArea');
+        const emptyLogMessage = document.getElementById('emptyLogMessage');
+        const clearLogBtn = document.getElementById('clearLog');
+        const pauseLogBtn = document.getElementById('pauseLog');
+        const totalKeysElement = document.getElementById('totalKeys');
+        const uniqueKeysElement = document.getElementById('uniqueKeys');
+        const specialKeysElement = document.getElementById('specialKeys');
+        
+        // State variables
+        let isLogging = true;
+        let totalKeys = 0;
+        let uniqueKeys = new Set();
+        let specialKeysCount = 0;
+        let specialKeys = ['Enter', ' ', 'Tab', 'Escape', 'Backspace', 'Delete', 'Shift', 'Control', 'Alt', 'Meta', 'CapsLock', 'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight'];
+        
+        // Initialize
+        updateStats();
+        
+        // Capture keystrokes
+        inputArea.addEventListener('keydown', function(event) {
+            if (!isLogging) return;
+            
+            // Hide empty message if it's visible
+            if (emptyLogMessage.style.display !== 'none') {
+                emptyLogMessage.style.display = 'none';
+            }
+            
+            // Prevent default for some keys to avoid issues
+            if (['Tab', 'Enter'].includes(event.key)) {
+                event.preventDefault();
+            }
+            
+            // Create key element
+            const keyElement = document.createElement('span');
+            keyElement.className = 'key';
+            
+            // Check if it's a special key
+            if (event.key.length > 1 || event.key === ' ') {
+                keyElement.classList.add('special-key');
+                keyElement.textContent = event.key === ' ' ? 'Space' : event.key;
+                specialKeysCount++;
+            } else {
+                keyElement.textContent = event.key;
+            }
+            
+            // Add animation
+            keyElement.classList.add('key-press');
+            setTimeout(() => {
+                keyElement.classList.remove('key-press');
+            }, 200);
+            
+            // Add to log
+            logArea.appendChild(keyElement);
+            
+            // Scroll to bottom
+            logArea.scrollTop = logArea.scrollHeight;
+            
+            // Update stats
+            totalKeys++;
+            uniqueKeys.add(event.key);
+            updateStats();
+        });
+        
+        // Clear log function
+        clearLogBtn.addEventListener('click', function() {
+            logArea.innerHTML = '';
+            emptyLogMessage.style.display = 'block';
+            
+            // Reset stats
+            totalKeys = 0;
+            uniqueKeys.clear();
+            specialKeysCount = 0;
+            updateStats();
+        });
+        
+        // Pause/resume logging
+        pauseLogBtn.addEventListener('click', function() {
+            isLogging = !isLogging;
+            if (isLogging) {
+                pauseLogBtn.innerHTML = '<i class="fas fa-pause me-1"></i> Pause';
+                pauseLogBtn.style.backgroundColor = 'rgba(220, 53, 69, 0.2)';
+            } else {
+                pauseLogBtn.innerHTML = '<i class="fas fa-play me-1"></i> Resume';
+                pauseLogBtn.style.backgroundColor = 'rgba(40, 167, 69, 0.2)';
+            }
+        });
+        
+        // Update statistics
+        function updateStats() {
+            totalKeysElement.textContent = totalKeys;
+            uniqueKeysElement.textContent = uniqueKeys.size;
+            specialKeysElement.textContent = specialKeysCount;
+        }
+        
+        // Focus the input area when the page loads
+        window.addEventListener('load', function() {
+            inputArea.focus();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SecurePass Pro - Cybersecurity Toolkit</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --primary: #0c7cd5;
+      --info: #17a2b8;
+      --warning: #ffc107;
+      --success: #28a745;
+      --danger: #dc3545;
+      --dark-bg: #0a0e17;
+      --darker-bg: #05080f;
+      --card-bg: #131a2a;
+    }
+    
+    body {
+      background: linear-gradient(135deg, var(--darker-bg) 0%, var(--dark-bg) 70%);
+      color: #e9ecef;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      position: relative;
+      overflow-x: hidden;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 100%;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%230c7cd5" fill-opacity="0.05" d="M0,128L48,117.3C96,107,192,85,288,112C384,139,480,213,576,224C672,235,768,181,864,160C960,139,1056,149,1152,165.3C1248,181,1344,203,1392,213.3L1440,224L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat bottom;
+      background-size: cover;
+      z-index: -1;
+    }
+    
+    .navbar {
+      background: rgba(10, 14, 23, 0.95) !important;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(12, 124, 213, 0.2);
+      padding: 0.8rem 1rem;
+    }
+    
+    .hero-section {
+      padding: 5rem 0 3rem;
+      text-align: center;
+    }
+    
+    .hero-title {
+      font-weight: 800;
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, #0c7cd5, #17a2b8, #28a745);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 0 2px 10px rgba(12, 124, 213, 0.3);
+    }
+    
+    .hero-subtitle {
+      font-size: 1.4rem;
+      margin-bottom: 2.5rem;
+      color: #adb5bd;
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .tool-card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      height: 100%;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .tool-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 5px;
+      height: 0;
+      background: linear-gradient(to bottom, var(--accent-color), transparent);
+      transition: height 0.5s ease;
+    }
+    
+    .tool-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .tool-card:hover::before {
+      height: 100%;
+    }
+    
+    .tool-card .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.2rem;
+      background: linear-gradient(135deg, var(--accent-color), transparent);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .tool-card .card-title {
+      font-size: 1.4rem;
+      margin-bottom: 0.8rem;
+      font-weight: 600;
+    }
+    
+    .tool-card .card-text {
+      color: #adb5bd;
+      margin-bottom: 1.5rem;
+      font-size: 0.95rem;
+    }
+    
+    .btn-tool {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #f8f9fa;
+      padding: 0.6rem 1.5rem;
+      border-radius: 30px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+    }
+    
+    .btn-tool::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-color), transparent);
+      transition: all 0.5s ease;
+      z-index: -1;
+    }
+    
+    .btn-tool:hover {
+      color: #fff;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.4);
+    }
+    
+    .btn-tool:hover::before {
+      width: 100%;
+    }
+    
+    .password-card { --accent-color: #0c7cd5; --accent-rgb: 12, 124, 213; }
+    .text-encrypt-card { --accent-color: #17a2b8; --accent-rgb: 23, 162, 184; }
+    .image-encrypt-card { --accent-color: #ffc107; --accent-rgb: 255, 193, 7; }
+    .file-encrypt-card { --accent-color: #28a745; --accent-rgb: 40, 167, 69; }
+    .keylogger-card { --accent-color: #dc3545; --accent-rgb: 220, 53, 69; }
+    .web-keylogger-card { --accent-color: #e83e8c; --accent-rgb: 232, 62, 140; }
+    
+    .features-section {
+      padding: 5rem 0;
+      background: rgba(5, 8, 15, 0.7);
+    }
+    
+    .section-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      font-weight: 700;
+      font-size: 2.2rem;
+    }
+    
+    .feature-box {
+      text-align: center;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .feature-icon {
+      font-size: 2.5rem;
+      margin-bottom: 1.2rem;
+      color: #0c7cd5;
+    }
+    
+    footer {
+      background: var(--darker-bg);
+      padding: 3rem 0 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    
+    .floating {
+      animation: float 5s ease-in-out infinite;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+      .hero-title {
+        font-size: 2.8rem;
+      }
+      
+      .hero-subtitle {
+        font-size: 1.2rem;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 2.3rem;
+      }
+      
+      .tool-card {
+        margin-bottom: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <i class="fas fa-shield-alt me-2" style="color: #0c7cd5;"></i>
+        <span class="fw-bold">SecurePass Pro</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <h1 class="hero-title">🔐 SecurePass Pro</h1>
+          <p class="hero-subtitle">Your all-in-one cybersecurity toolkit featuring password analysis, encryption tools, and security simulations to protect your digital life.</p>
+        <p class="text-success">
+  ☁️ Powered by AWS S3 | 🔐 End-to-End Encryption | 🚫 Zero Plaintext Storage
+</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tools Section -->
+  <section class="tools-section">
+    <div class="container">
+      <div class="row">
+        <!-- Password Analyzer -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="tool-card password-card">
+            <div class="card-icon">
+              <i class="fas fa-key"></i>
+            </div>
+            <h3 class="card-title">Password Analyzer</h3>
+            <p class="card-text">Test your password strength and get recommendations for improving your security.</p>
+            <a href="/password" class="btn btn-tool">Use Tool</a>
+          </div>
+        </div>
+        <div class="col-md-6 col-lg-4 mb-4">
+  <div class="tool-card file-encrypt-card">
+    <div class="card-icon">
+      <i class="fas fa-folder-open"></i>
+    </div>
+    <h3 class="card-title">View Cloud Files</h3>
+    <p class="card-text">Browse and download encrypted files stored securely in AWS S3.</p>
+    <a href="/files" class="btn btn-tool">View Files</a>
+  </div>
+</div>
+        
+
+
+        <!-- Text Encrypt/Decrypt -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="tool-card text-encrypt-card">
+            <div class="card-icon">
+              <i class="fas fa-font"></i>
+            </div>
+            <h3 class="card-title">Text Encrypt/Decrypt</h3>
+            <p class="card-text">Securely encrypt and decrypt sensitive text messages with advanced algorithms.</p>
+            <a href="/text-encrypt" class="btn btn-tool">Use Tool</a>
+          </div>
+        </div>
+        
+        <!-- Image Encrypt/Decrypt -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="tool-card image-encrypt-card">
+            <div class="card-icon">
+              <i class="fas fa-image"></i>
+            </div>
+            <h3 class="card-title">Image Encrypt/Decrypt</h3>
+            <p class="card-text">Protect your sensitive images with strong encryption to prevent unauthorized access.</p>
+            <a href="/image-encrypt" class="btn btn-tool">Use Tool</a>
+          </div>
+        </div>
+        
+        <!-- File Encrypt/Decrypt -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="tool-card file-encrypt-card">
+            <div class="card-icon">
+              <i class="fas fa-file"></i>
+            </div>
+            <h3 class="card-title">File Encrypt/Decrypt</h3>
+            <p class="card-text">Encrypt any type of file with military-grade encryption to keep your data safe.</p>
+            <a href="/file-encrypt" class="btn btn-tool">Use Tool</a>
+          </div>
+        </div>
+        
+        <!-- Keylogger Simulation -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="tool-card keylogger-card">
+            <div class="card-icon">
+              <i class="fas fa-keyboard"></i>
+            </div>
+            <h3 class="card-title">Keylogger Simulation</h3>
+            <p class="card-text">Understand how keyloggers work and learn how to protect yourself from them.</p>
+            <a href="/keylogger" class="btn btn-tool">Use Tool</a>
+          </div>
+        </div>
+        
+        <!-- Web Keylogger Demo -->
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="tool-card web-keylogger-card">
+            <div class="card-icon">
+              <i class="fas fa-laptop"></i>
+            </div>
+            <h3 class="card-title">Web Keylogger Demo</h3>
+            <p class="card-text">See how web-based keyloggers operate and learn defensive strategies against them.</p>
+            <a href="/web-keylogger" class="btn btn-tool">Use Tool</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <h3>Download File</h3>
+<form method="get" onsubmit="event.preventDefault(); downloadFile();">
+    <input type="text" id="filename" placeholder="Enter filename.enc" required>
+    <button type="submit">Download</button>
+</form>
+<h3>Upload File to Secure Cloud</h3>
+<form action="/upload" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">Upload</button>
+</form>
+
+<script>
+function downloadFile() {
+    const filename = document.getElementById("filename").value;
+    window.location.href = "/download/" + filename;
+}
+</script>
+
+
+
+  <!-- Features Section -->
+  <section class="features-section">
+    <div class="container">
+      <h2 class="section-title">Why Choose SecurePass Pro?</h2>
+      <div class="row">
+        <div class="col-md-4">
+          <div class="feature-box">
+            <div class="feature-icon">
+              <i class="fas fa-lock"></i>
+            </div>
+            <h3>Military-Grade Encryption</h3>
+            <p>We use industry-standard encryption algorithms to ensure your data remains secure.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-box">
+            <div class="feature-icon floating">
+              <i class="fas fa-bolt"></i>
+            </div>
+            <h3>Lightning Fast</h3>
+            <p>Our tools process your requests quickly without compromising on security.</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-box">
+            <div class="feature-icon">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <h3>Privacy Focused</h3>
+            <p>Files are encrypted before being securely stored in AWS cloud infrastructure, ensuring zero plaintext exposure.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="row">
+        <div class="col-md-6">
+          <h5>SecurePass Pro</h5>
+          <p>Your all-in-one cybersecurity solution for a safer digital experience.</p>
+        </div>
+        <div class="col-md-6 text-md-end">
+          <p>&copy; 2025 SecurePass Pro. All rights reserved.</p>
+          <div class="mt-2">
+            <a href="#" class="text-light me-3"><i class="fab fa-twitter"></i></a>
+            <a href="#" class="text-light me-3"><i class="fab fa-linkedin"></i></a>
+            <a href="#" class="text-light me-3"><i class="fab fa-github"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Add animation to cards on scroll
+    document.addEventListener('DOMContentLoaded', function() {
+      const cards = document.querySelectorAll('.tool-card');
+      
+      cards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+          this.classList.add('shadow-lg');
+        });
+        
+        card.addEventListener('mouseleave', function() {
+          this.classList.remove('shadow-lg');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
